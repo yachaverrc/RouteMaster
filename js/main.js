@@ -54,9 +54,10 @@ function drawBall(x, y) {
 
 function draw() {
    
-    console.log("drawing")
+    console.log("Inicia la funcion")
     
-    for(let index = 0; index < polygon.length; index++){
+    for(let index = 0; index < polygon.length-1; index++){
+        console.log("Entra al for")
         
         let movx = polygon[index+1][0]
         let movy = polygon[index+1][1]
@@ -65,25 +66,29 @@ function draw() {
             console.log("indefinidas")
         }
 
-        if(movx > dirx){        
-            dirx += 1;
-            console.log(dirx," ",diry)
-            drawBall(dirx,diry);              
-        }
-            
-        if(movy > diry){
-            diry += 1;
-            drawBall(dirx,diry);  
+        while(movx > dirx || movx > dirx){
+            console.log("Entra al while")
+
+            if(movx > dirx){        
+                dirx += 1;
+                drawBall(dirx,diry);              
+            }
                 
-        }   
+            if(movy > diry){
+                diry += 1;
+                drawBall(dirx,diry);  
+                    
+            } 
+        }  
+        console.log(dirx," ",diry)
         
     }
 }
 
-drawlines(polygon);
-drawMap(polygon);
+//drawlines(polygon);
+//drawMap(polygon);
 
-//setInterval(draw,3000);
+setInterval(draw,3000);
 
 
 
