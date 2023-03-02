@@ -2,18 +2,19 @@ var c = document.getElementById("idCanva");
 var ctx = c.getContext("2d");
 ctx.beginPath();
 
+
+
 var polygon = [
-    [50, 50],
-    [50, 225],
-    [50, 400],
+    [75, 75],
+    [75, 225],
+    [75, 400],
     [400, 400],
     [400, 225],
-    [400,50]
+    [400,75]
 ];
 
 var dirx = polygon[0][0];
 var diry = polygon[0][1];
-
 
 function drawMap(poly) {
     ctx.beginPath();
@@ -76,8 +77,7 @@ function draw() {
                 
             if(movy > diry){
                 diry += 1;
-                drawBall(dirx,diry);  
-                    
+                drawBall(dirx,diry);                   
             } 
         }  
         console.log(dirx," ",diry)
@@ -85,15 +85,7 @@ function draw() {
     }
 }
 
-//drawlines(polygon);
-//drawMap(polygon);
+drawlines(polygon);
+drawMap(polygon);
 
-setInterval(draw,3000);
-
-
-
-
-
-
-
-
+//setInterval(draw,3000);
