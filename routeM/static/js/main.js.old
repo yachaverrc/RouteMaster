@@ -1,0 +1,119 @@
+const { Point } = require('./point');
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+
+var c2 = document.getElementById("myCanvas");
+var ctx2 = c2.getContext("2d");
+
+var red = "#ff0000"
+var blue = "#0095DD"
+var green = "#03fc30"
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+let start = new Point({x:75,y:75}, true, 5000);
+let mid = new Point({x:255, y:75}, false, 8000);
+let end = new Point({x:400, y:75}, false, 3000);
+
+start.setNextPoint(mid);
+mid.setNextPoint(end);
+
+let current = start;
+
+async function drawTest(){
+    while(true){
+        if(!current){
+            break;
+        }
+        // codigo que necsito hacer
+        let time = current.timeNext;
+        let x = current.position.x;
+        let y = current.position.y;
+
+
+        drawMap(current, blue)
+        
+        await timeout(time)
+        drawBall(x,y,blue,ctx2)
+        current = current.next();
+    }
+}
+
+
+
+
+/*
+var polygon = [
+    [75, 75],
+    [225,75],
+    [400,75],
+    [400, 240],
+    [225, 240],
+    [75, 240],
+    [75, 400],
+    [225,400],
+    [400, 400]   
+];
+
+var drivers = [
+    [polygon[0],9000,polygon[1],8000,polygon[2],7000,polygon[3],6000,polygon[4],
+    5000,polygon[5],4000,polygon[6],6000,polygon[7],2400,polygon[8],4000]
+];
+
+var dirx = polygon[0][0];
+var diry = polygon[0][1];*/
+
+
+
+function drawMap(poly,color) {
+    ctx.beginPath();
+    var x, y;
+    for (var index in poly) {
+        x = poly[index][0];
+        y = poly[index][1];
+        ctx.arc(x, y, 10, 0, Math.PI*2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.closePath();   
+    }
+}
+
+function drawlines(poly) {
+    ctx.beginPath();
+    var x, y;
+    for (let index = 0; index < poly.length; index++) {    
+        x = poly[index][0];
+        y = poly[index][1];
+        ctx.lineTo(x, y);
+        ctx.moveTo(x, y);
+        ctx.closePath();
+        ctx.stroke();
+    }
+   
+}
+
+function drawBall(x, y, color, ctx) {
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.closePath();
+}
+
+function follow(){
+    
+}
+
+drawlines(polygon,blue);
+drawMap(polygon,blue);
+
+
+follow();
+
+
+
+//setInterval(draw,2400);

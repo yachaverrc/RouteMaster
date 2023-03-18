@@ -1,0 +1,56 @@
+[
+    {
+        "position":[75,75],
+        "isCurrent": true,
+        "time":4000
+    },
+
+    {
+        "position":[225,75],
+        "isCurrent": false,
+        "time":3000
+    },
+
+    {
+        "position":[400,75],
+        "isCurrent": false,
+        "time":2000
+    },
+
+    {
+        "position":[400,225],
+        "isCurrent": false,
+        "time":3000
+    },
+
+    {
+        "position":[225,225],
+        "isCurrent": false,
+        "time":5000
+    },
+
+    {
+        "position":[75,225],
+        "isCurrent": false,
+        "time":2000
+    },
+
+    {
+        "position":[75,400],
+        "isCurrent": false,
+        "time":4000
+    },
+
+    {
+        "position":[225,400],
+        "isCurrent": false,
+        "time":3000
+    },
+
+    {
+        "position":[400,400],
+        "isCurrent": false,
+        "time":5000
+    }
+
+]

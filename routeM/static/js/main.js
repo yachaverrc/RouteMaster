@@ -1,91 +1,138 @@
 var c = document.getElementById("idCanva");
 var ctx = c.getContext("2d");
-ctx.beginPath();
 
+var c2 = document.getElementById("idCanva2");
+var ctx2 = c2.getContext("2d");
 
+var red = "#ff0000"
+var blue = "#0095DD"
+var green = "#03fc30"
+let start = new Point({x:75,y:75}, true, 2000);
+let mid = new Point({x:225, y:75}, false, 2000);
+let end = new Point({x:400, y:75}, false, 2000);
 
-var polygon = [
-    [75, 75],
-    [75, 225],
-    [75, 400],
-    [400, 400],
-    [400, 225],
-    [400,75]
-];
+function readNodes(){
 
-var dirx = polygon[0][0];
-var diry = polygon[0][1];
+    fetch('/nodes.json')
+    .then(function(res){
+        return res.json();
+    })
+    .then(function(data){
+        data.forEach(function(nodes){
+            console.log(nodes.position,nodes.time)
+        });
+    })
 
-function drawMap(poly) {
-    ctx.beginPath();
-    var x, y;
-    for (var index in poly) {
-        x = poly[index][0];
-        y = poly[index][1];
-        ctx.arc(x, y, 10, 0, Math.PI*2);
-        ctx.fillStyle = "#0095DD";
-        ctx.fill();
-        ctx.closePath();   
-    }
 }
 
-function drawlines(poly) {
-    ctx.beginPath();
-    var x, y;
-    for (let index = 0; index < poly.length; index++) {    
-        x = poly[index][0];
-        y = poly[index][1];
-        ctx.lineTo(x, y);
-        ctx.moveTo(x, y);
-        ctx.closePath();
-        ctx.stroke();
-    }
-   
-}
+start.setNextPoint(mid);
+mid.setNextPoint(end);
 
-function drawBall(x, y) {
-    ctx.clearRect(0, 0, c.width, c.height);
+end.setPreviousPoint(mid);
+mid.setPreviousPoint(start);
+
+function drawBall(x, y, color, ctx) {
+
+    if(color == red){
+        ctx.clearRect(0, 0, c.width, c.height);
+    }
+
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, Math.PI*2);
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
 }
 
-
-function draw() {
-   
-    console.log("Inicia la funcion")
+function drawMap() {
     
-    for(let index = 0; index < polygon.length-1; index++){
-        console.log("Entra al for")
-        
-        let movx = polygon[index+1][0]
-        let movy = polygon[index+1][1]
+    let current = start;
 
-        if(typeof movx,movy === 'undefined'){
-            console.log("indefinidas")
+    while(true) {
+        if(!current){
+            break;
         }
+        let x = current.position.x;
+        let y = current.position.y;
+        drawBall(x, y, blue, ctx); 
+        current = current.nextPoint();
+    } 
+}
 
-        while(movx > dirx || movx > dirx){
-            console.log("Entra al while")
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-            if(movx > dirx){        
-                dirx += 1;
-                drawBall(dirx,diry);              
-            }
-                
-            if(movy > diry){
-                diry += 1;
-                drawBall(dirx,diry);                   
-            } 
-        }  
-        console.log(dirx," ",diry)
+async function forward(firsPoint){
+    let current = firsPoint;
+    
+    let x = current.position.x;
+    let y = current.position.y;
+
+    drawBall(x,y,red,ctx2)
+
+    while(true){
+        if(!current){
+            break;
+        }
+        // codigo que necsito hacer
+        let time = current.timeNext;
+
+        await timeout(time)
         
+        current = current.nextPoint();
+
+        if(!current){
+            break;
+        }
+        x = current.position.x;
+        y = current.position.y;
+
+        drawBall(x,y,red,ctx2)
     }
 }
 
-drawlines(polygon);
-drawMap(polygon);
+async function backward(lastPoint){
+    let current = lastPoint;
+    
+    let x = current.position.x;
+    let y = current.position.y;
 
-//setInterval(draw,3000);
+    drawBall(x,y,red,ctx2)
+
+    while(true){
+        if(!current){
+            break;
+        }
+        console.log(current);
+        // codigo que necsito hacer
+        let time = current.timeNext;
+
+        await timeout(time)
+        
+        current = current.previousPoint();
+
+        if(!current){
+            break;
+        }
+
+        x = current.position.x;
+        y = current.position.y;
+
+        drawBall(x,y,red,ctx2)
+    }
+}
+
+/*async function main(){
+    drawMap();
+    await forward(start);
+    await backward(end);
+}
+
+main()
+.then(()=>{
+    console.log("FIN");
+})*/
+
+readNodes()
+
